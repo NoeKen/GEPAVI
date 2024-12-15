@@ -7,6 +7,7 @@ public class Personne {
     private String nom;
     private String prenom;
     private Passport passport;
+    private boolean synchronize = false;
 
     //Définition du constructeur personne.Personne
 //    public personne.Personne(String nom, String prenom, passport.Passport passport) {
@@ -54,9 +55,17 @@ public class Personne {
         this.passport = passport;
     }
 
+    public boolean isSynchronize() {
+        return synchronize;
+    }
+
+    public void setSynchronize(boolean synchronize) {
+        this.synchronize = synchronize;
+    }
+
     @Override
     public String toString() {
-        return "personne.Personne{" +
+        return "Personne{" +
                 "\n\trefID='" + refID + '\'' +
                 ", \n\tnom='" + nom + '\'' +
                 ", \n\tprenom='" + prenom + '\'' +

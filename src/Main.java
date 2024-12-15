@@ -36,7 +36,9 @@ public class Main {
                     3.Demander un visa
                     4.Afficher les informations d’une personne
                     5.Simuler une situation
-                    6.Quitter""");
+                    6.Inscription aux processus automatiques
+                    
+                    NB: Entrer n'importe quelle autre valeure numérique pour quitter le programme""");
             // Capture de la réponse de l'utilisateur et gestion d'exception suite à une entrée de donnée invalide
             choixMenu = ServicesUtiles.IntExceptionManager(sc);
 
@@ -53,7 +55,7 @@ public class Main {
                     break;
                 }
                 case 3: {
-                    demanderVisa(passports, visas, serviceConsulaire, sc);
+                    demanderVisa(passports, visas,servicePassport, serviceConsulaire, sc);
                     break;
                 }
                 case 4: {
@@ -65,25 +67,30 @@ public class Main {
                     System.out.println("\n\n                                    MENU de SIMULATION\n");
                     System.out.println("Que voulez-vous faire? Entrez le numéro correspondant");
                     System.out.println("""
-                            1.Annuler un passeport\
-                            2.Prolonger la validité du passeport\
-                            3.Prolonger la validité du visa\
-                            4.Retourner au menu principal""");
+                            1.Annuler un passeport\s
+                            2.Annuler un visa
+                            3.Prolonger la validité du passeport
+                            4.Prolonger la validité du visa
+                            5.Retourner au menu principal""");
                     choixsubMenu = ServicesUtiles.IntExceptionManager(sc);
                     switch (choixsubMenu) {
                         case 1: {
                             declarerPerte(passports, servicePassport, sc);
                             break;
                         }
-                        case 2: {
-                            prolongerValiditePassport(passports,servicePassport,sc);
+                        case 2:{
+                            AnnulerVisa(passports,servicePassport,serviceConsulaire,sc);
                             break;
                         }
                         case 3: {
-                            prolongerValiditeVisa(passports,servicePassport,serviceConsulaire,sc);
+                            prolongerValiditePassport(passports,servicePassport,sc);
                             break;
                         }
                         case 4: {
+                            prolongerValiditeVisa(passports,servicePassport,serviceConsulaire,sc);
+                            break;
+                        }
+                        case 5: {
                             skip = true;
                             break;
                         }
@@ -94,7 +101,7 @@ public class Main {
                     break;
                 }
                 case 6: {
-                    repeter = false;
+                    declancherAutomatisation(personnes,sc);
                     break;
                 }
                 default: {
@@ -104,8 +111,8 @@ public class Main {
             if (repeter && !skip) {
                 System.out.println("\nRetourner au menu principal? \n1.Oui \n2.Quitter");
                 repeter = ServicesUtiles.IntExceptionManager(sc) == 1;
-            }
-            System.out.println("Merci d'avoir utilisé le programme GEPAVI. Au revoir !");
+            }else
+                System.out.println("Merci d'avoir utilisé le programme GEPAVI. Au revoir !");
         } while (repeter);
     }
 
@@ -157,27 +164,20 @@ public class Main {
 
         personne = servicePassport.creerPassport(personne, passports, LocalDate.now(), LocalDate.now().plusYears(servicePassport.getDureePassport()));
 
-        System.out.println("passport généré avec succès: " + personne);
+
     }
 
     /**
      * Methode pour effectuer une demande de visa au service consulaire
      */
-    private static void demanderVisa(ArrayList<Passport> passports, ArrayList<Visa> visas, ServiceConsulaire serviceConsulaire, Scanner sc) {
+    private static void demanderVisa(ArrayList<Passport> passports, ArrayList<Visa> visas,ServicePassport servicePassport, ServiceConsulaire serviceConsulaire, Scanner sc) {
         String numPassport;
-        Passport monPassport = null;
+        Passport monPassport;
         int type = 2;
         System.out.println("Entrer le numero du passport : ");
         numPassport = sc.next();
-        System.out.println("Vous avez entré le numéro de passport suivant: " + numPassport);
         //Recherche du passport dans la liste des passports existants à partir du numero de passport entré par l'utilisateur
-        for (Passport passport : passports) {
-            if (passport.getNumPassport().equals(numPassport)) {
-                monPassport = passport;
-                System.out.println("passport.Passport appartenant à : " + passport.getPersonne().getPrenom() + " " + passport.getPersonne().getNom());
-            }
-        }
-
+        monPassport= servicePassport.getPassport(passports, numPassport);
         if (monPassport == null) {
             System.out.println("le passport avec le numéro: '" + numPassport + "' n'a pas été trouvée. veuillez faire une nouvelle demande de passport");
             return;
@@ -201,7 +201,9 @@ public class Main {
         }
         if (personne == null) {
             System.out.println("Aucune personne trouvée avec ce numéro de référence");
+            return;
         }
+        System.out.println(personne);
     }
 
     /**
@@ -222,6 +224,20 @@ public class Main {
         servicePassport.invaliderPassport(monPassport);
     }
 
+    /**Methode pour annuler un visa*/
+    private static void AnnulerVisa(ArrayList<Passport> passports,ServicePassport servicePassport, ServiceConsulaire serviceConsulaire, Scanner sc) {
+        System.out.println("Veuillez entrer le numéro du passport: ");
+        String numPassport = sc.next();
+        //Recherche d'un passport via la classe ServicePassport
+        Passport monPassport = servicePassport.getPassport(passports,numPassport);
+        //Vérifier si le passport a été retrouvé dans la liste des passports enrégistrés
+        if (monPassport == null) {
+            System.out.println("passport.Passport non trouvé dans la base avec ce numéro : " + numPassport);
+            return;
+        }
+        serviceConsulaire.InvaliderVisa(monPassport);
+    }
+
     /**Methode pour prolonger la validite d'un passport*/
     private static void prolongerValiditePassport(ArrayList<Passport> passports, ServicePassport servicePassport,Scanner sc) {
         System.out.println("Veuillez entrer le numéro du passport: ");
@@ -237,6 +253,7 @@ public class Main {
         int prolongement = ServicesUtiles.IntExceptionManager(sc);
         servicePassport.prolongerDateExpiration(monPassport,prolongement);
     }
+
     /**Methode pour prolonger la validite d'un visa*/
     private static void prolongerValiditeVisa(ArrayList<Passport> passports, ServicePassport servicePassport,ServiceConsulaire serviceConsulaire,Scanner sc){
         System.out.println("Veuillez entrer le numéro du passport: ");
@@ -253,4 +270,21 @@ public class Main {
         serviceConsulaire.ProlongerVisa(monPassport,prolongement);
     }
 
+    /**Methode pour Activer la synchronisation automatique sur les comptes*/
+    private static void declancherAutomatisation(ArrayList<Personne> personnes, Scanner sc) {
+        Personne personne=null;
+        String refID;
+        System.out.println("Entrer le refID de la personne pour qui déclancher l'automatisation: ");
+        refID = sc.next();
+        for (Personne person : personnes) {
+            if (person.getRefID().equals(refID)) {
+                personne = person;
+            }
+        }
+        if (personne == null){
+            System.out.println("Aucune personne trouvée avec ce refID: "+refID);
+        }
+        personne.setSynchronize(true);
+        System.out.println("La synchronisation a bien été activée pour le compte de : "+personne.getPrenom() + " "+personne.getNom());
+    }
 }

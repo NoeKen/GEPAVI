@@ -82,12 +82,12 @@ public class Visa {
 
     @Override
     public String toString() {
-        return "visa.Visa{" +
+        return "Visa{" +
                 "\n\t\t\trefID='" + refID + '\'' +
                 ", \n\t\t\ttype='" + type + '\'' +
                 ", \n\t\t\tdateDelivrance=" + dateDelivrance +
                 ", \n\t\t\tdateExpiration=" + dateExpiration +
                 ", \n\t\t\tvalide=" + valide +
-                "\n}";
+                "\n\t\t}";
     }
 }

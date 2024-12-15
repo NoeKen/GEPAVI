@@ -55,29 +55,43 @@ public class ServiceConsulaire {
     /**
      * Methode pour prolonger la durée du visa d'une personne
      */
-    public Visa ProlongerVisa(Passport passport, int prolongement) {
-        if (passport.getVisa()==null) {
+    public void ProlongerVisa(Passport passport, int prolongement) {
+        //Vérifier si le passport dispose déjà d'un visa
+        if (passport.getVisa() == null) {
             System.out.println("Aucune demande de visa n'a encore été émise pour ce passport. Nous ne pouvons donc pas prolonger son échéance.");
-            return null;
+            return;
         }
+        //Verifier si le visa est toujours valide avant de procéder au prolongement
         if (passport.getVisa().getValide()) {
+            // Attribuer la date d'expiration du passport au visa si la nouvelle date d'expiration du visa est supérieure à celle du passport
             if (passport.getDateExpiration().isBefore(passport.getVisa().getDateExpiration().plusYears(prolongement))) {
-                System.out.println("La nouvelle date d'expiration du visa est superieure a celle du passport. celle su passport lui sera automatiquement attribuee");
+                System.out.println("La nouvelle date d'expiration du visa est superieure a celle du passport. celle du passport lui sera automatiquement attribuee");
                 passport.getVisa().setDateExpiration(passport.getDateExpiration());
-                return passport.getVisa();
+                return;
             }
             passport.getVisa().setDateExpiration(passport.getVisa().getDateExpiration().plusYears(prolongement));
+            System.out.println("Visa prolongé avec surccès : " + passport.getVisa());
+            return;
         }
-        System.out.println("Votre visa n'est plus valide. Veuillez le renouveler");
-        return passport.getVisa();
+        System.out.println("Votre visa n'est plus valide. Veuillez le renouveler \n" + passport.getVisa());
     }
 
     /**
      * Methode pour invalider un visa
      */
-    public Visa InvaliderVisa(Visa visa) {
-        visa.setValide(false);
-        return visa;
+    public void InvaliderVisa(Passport passport) {
+        try {
+            if (!passport.getVisa().getValide()) {
+                System.out.println("Ce visa a déjà été invalidé.");
+                return;
+            }
+            passport.getVisa().setValide(false);
+            System.out.println("Visa invalidé avec succès");
+        } catch (Exception e) {
+            System.out.println("Une erreur est survenue lors de l'annulation du visa");
+            if (passport.getVisa() == null) {
+                System.out.println("Aucun visa rattaché à ce passport");
+            }
+        }
     }
-
 }

@@ -79,7 +79,7 @@ public class Passport {
 
     @Override
     public String toString() {
-        return "\n\tpassport.Passport: {" +
+        return "\n\tPassport: {" +
                 "\n\t\tnumPassport='" + numPassport + '\'' +
                 ", \n\t\tdateDelivrance=" + dateDelivrance +
                 ", \n\t\tdateExpiration=" + dateExpiration +

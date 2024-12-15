@@ -25,6 +25,7 @@ public class ServicePassport {
         personne.setPassport(passport);
         passports.add(passport);
         index++;
+        System.out.println("passport généré avec succès: " + personne);
         return personne;
     }
 
@@ -32,7 +33,12 @@ public class ServicePassport {
      * Methode prolonger la duree de validite d'un passport
      */
     public Passport prolongerDateExpiration(Passport passport, int prolongement) {
-        passport.setDateExpiration(passport.getDateExpiration().plusYears(prolongement));
+        if (passport.getValide()) {
+            passport.setDateExpiration(passport.getDateExpiration().plusYears(prolongement));
+            System.out.println("Passport prolongé avec succès jusqu'à la date du : " + passport.getDateExpiration());
+            return passport;
+        }
+        System.out.println("Votre passport n'est plus valide. Veuillez le renouveler");
         return passport;
     }
 
@@ -41,7 +47,7 @@ public class ServicePassport {
      */
     public Passport invaliderPassport(Passport passport) {
         passport.setValide(false);
-        System.out.println("passport.Passport invalidé. Vous devez également faire invalider votre visa");
+        System.out.println("Passport invalidé. Vous devez également faire invalider votre visa");
         return passport;
     }
 
@@ -49,9 +55,11 @@ public class ServicePassport {
     public Passport getPassport (ArrayList<Passport> passports, String numPassport){
         for (Passport passport : passports) {
             if (passport.getNumPassport().equals(numPassport)) {
+                System.out.println("Passport appartenant à : " + passport.getPersonne().getPrenom() + " " + passport.getPersonne().getNom());
                 return passport;
             }
         }
+
         return null;
     }
 
