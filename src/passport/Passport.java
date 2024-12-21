@@ -27,24 +27,8 @@ public class Passport {
         this.dateExpiration = dateExpiration;
     }
 
-    public Passport(){
-        this.numPassport = "2";
-        this.dateDelivrance = LocalDate.now();
-        this.dateExpiration = LocalDate.now().plus(5, ChronoUnit.DAYS);
-        this.valide = true;
-        invaliderPassport();
-    }
 
-    private long invaliderPassport() {
-        // Calcul de la différence en jours totaux
-        long totalDays = ChronoUnit.DAYS.between(dateDelivrance, dateExpiration);
-        System.out.println("\n\n\t\t\t\nTotal de days de passport: " + totalDays+"\n\n\n");
-        if (totalDays <= 7 ){
-            valide = false;
-        }
-        return totalDays;
-    }
-
+    // Définition des getters et setters
     public String getNumPassport() {
         return numPassport;
     }
@@ -93,7 +77,7 @@ public class Passport {
         this.visa = visa;
     }
 
-    // Methode toString formatée autrement pour y inclure la personne de référence
+    /** Methode toString formatée autrement pour y inclure la personne de référence*/
     public String passportToString() {
         return "Passprt: {"
                 + "\n\tnumPassport= " + numPassport
@@ -115,7 +99,6 @@ public class Passport {
                 ", \n\t\tlieuDelivrance='" + lieuDelivrance + '\'' +
                 ", \n\t\tvalide=" + valide +
                 ", \n\t\tvisa=" + visa +
-                "\n\t\tJours restants: "+ invaliderPassport()+
                 "\n\t}";
     }
 }
