@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class ServicePassport {
     private final int DUREEPASSPORT = 10;
     private int index = 1;
+    ArrayList<Passport> passports = new ArrayList<>();
 
     public int getDureePassport() {
         return DUREEPASSPORT;
@@ -20,7 +21,7 @@ public class ServicePassport {
     /**
      * Methode pour Generer un nouveau passport
      */
-    public void creerPassport(Personne personne, ArrayList<Passport> passports) {
+    public void creerPassport(Personne personne) {
         try {
             Passport passport = new Passport(ServicesUtiles.GenerateUniqueID(index), personne, LocalDate.now(), LocalDate.now().plusYears(DUREEPASSPORT));
             personne.setPassport(passport);
@@ -41,6 +42,13 @@ public class ServicePassport {
             if (passport.getValide()) {
                 passport.setDateExpiration(passport.getDateExpiration().plusYears(prolongement));
                 System.out.println("Passport prolongé avec succès jusqu'à la date du : " + passport.getDateExpiration());
+
+                /* Vérifier si la synchronisation est activée pour cette personne et possède bien un visa pour prolonger sa durée
+                 jusqu'à la nouvelle date d'expiration du passport */
+                if (passport.getPersonne().isSynchronize() && passport.getVisa() != null) {
+                    passport.getVisa().setDateExpiration(passport.getDateExpiration());
+                    System.out.println("Votre visa a également été prolongé jusqu'à la même date du passport");
+                }
                 return;
             }
             System.out.println("Votre passport n'est plus valide. Veuillez le renouveler");
@@ -71,7 +79,7 @@ public class ServicePassport {
     /**
      * Retrouver un passport à partir de son numéro
      */
-    public Passport getPassport(ArrayList<Passport> passports, String numPassport) {
+    public Passport getPassport(String numPassport) {
         for (Passport passport : passports) {
             if (passport.getNumPassport().equals(numPassport)) {
                 System.out.println("Passport appartenant à : " + passport.getPersonne().getPrenom() + " " + passport.getPersonne().getNom());
@@ -85,7 +93,7 @@ public class ServicePassport {
     /**
      * Vérifie la validité des passports et affiche ceux valides et ceux invalides
      */
-    public void verifierExpirationPassport(ArrayList<Passport> passports) {
+    public void verifierExpirationPassport() {
         // Verifier si la liste est vide
         if (!passports.isEmpty()) {
             // Affichage des passports invalides

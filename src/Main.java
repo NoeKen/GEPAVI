@@ -12,16 +12,17 @@ import java.util.Scanner;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        boolean skip = false; // Pour sauter la question de reprise du programme au Menu et sortir du programme
+        boolean skip; // Pour sauter la question de reprise du programme au Menu et sortir du programme
         ArrayList<Personne> personnes = new ArrayList<>();
-        ArrayList<Passport> passports = new ArrayList<>();
-        ArrayList<Visa> visas = new ArrayList<>();
         ServicePassport servicePassport = new ServicePassport();
         ServiceConsulaire serviceConsulaire = new ServiceConsulaire();
         int personneIndex = 1;
         Scanner sc = new Scanner(System.in);
         int choixMenu = 0;
         boolean repeter = true;
+
+//        Passport passport = new Passport();
+//        System.out.println("======= jours  passprt:  "+passport);
 
 
         System.out.println("\n\n**************************************************************************************************");
@@ -44,7 +45,7 @@ public class Main {
 
             switch (choixMenu) {
                 case 0: {
-                    servicePassport.verifierExpirationPassport(passports);
+                    servicePassport.verifierExpirationPassport();
                     break;
                 }
                 case 1: {
@@ -53,11 +54,11 @@ public class Main {
                     break;
                 }
                 case 2: {
-                    demanderPassport(personneIndex, personnes, passports, servicePassport, sc);
+                    demanderPassport(personneIndex, personnes, servicePassport, sc);
                     break;
                 }
                 case 3: {
-                    demanderVisa(passports, visas, servicePassport, serviceConsulaire, sc);
+                    demanderVisa(servicePassport, serviceConsulaire, sc);
                     break;
                 }
                 case 4: {
@@ -78,23 +79,23 @@ public class Main {
                     choixsubMenu = ServicesUtiles.IntExceptionManager(sc);
                     switch (choixsubMenu) {
                         case 1: {
-                            declarerPerte(passports, servicePassport, sc);
+                            declarerPerte(servicePassport, sc);
                             break;
                         }
                         case 2: {
-                            AnnulerVisa(passports, servicePassport, serviceConsulaire, sc);
+                            AnnulerVisa(servicePassport, serviceConsulaire, sc);
                             break;
                         }
                         case 3: {
-                            prolongerValiditePassport(passports, servicePassport, sc);
+                            prolongerValiditePassport(servicePassport, sc);
                             break;
                         }
                         case 4: {
-                            prolongerValiditeVisa(passports, servicePassport, serviceConsulaire, sc);
+                            prolongerValiditeVisa( servicePassport, serviceConsulaire, sc);
                             break;
                         }
                         case 5: {
-                            servicePassport.verifierExpirationPassport(passports);
+                            servicePassport.verifierExpirationPassport();
                             break;
                         }
                         case 6: {
@@ -144,7 +145,7 @@ public class Main {
     /**
      * Methode pour faire la demande d'un nouveau passport au service des passports
      */
-    private static void demanderPassport(int index, ArrayList<Personne> personnes, ArrayList<Passport> passports, ServicePassport servicePassport, Scanner sc) {
+    private static void demanderPassport(int index, ArrayList<Personne> personnes, ServicePassport servicePassport, Scanner sc) {
         int choix = 0;
         String personRefID;
         Personne personne = null;
@@ -169,7 +170,7 @@ public class Main {
             }
         }
         // Génération du nouveau passport
-        servicePassport.creerPassport(personne, passports);
+        servicePassport.creerPassport(personne);
 
 
     }
@@ -177,14 +178,14 @@ public class Main {
     /**
      * Methode pour effectuer une demande de visa au service consulaire
      */
-    private static void demanderVisa(ArrayList<Passport> passports, ArrayList<Visa> visas, ServicePassport servicePassport, ServiceConsulaire serviceConsulaire, Scanner sc) {
+    private static void demanderVisa(ServicePassport servicePassport, ServiceConsulaire serviceConsulaire, Scanner sc) {
         String numPassport;
         Passport monPassport;
         int type = 2;
         System.out.println("Entrer le numero du passport : ");
         numPassport = sc.next();
         //Recherche du passport dans la liste des passports existants à partir du numero de passport entré par l'utilisateur
-        monPassport = servicePassport.getPassport(passports, numPassport);
+        monPassport = servicePassport.getPassport(numPassport);
         if (monPassport == null) {
             System.out.println("le passport avec le numéro: '" + numPassport + "' n'a pas été trouvée. veuillez faire une nouvelle demande de passport");
             return;
@@ -196,7 +197,7 @@ public class Main {
                     3.Travailleur
                     4.Resident permanent""");
         type = ServicesUtiles.IntExceptionManager(sc);
-        visas.add(serviceConsulaire.DelivrerVisa(monPassport, type));
+        serviceConsulaire.DelivrerVisa(monPassport, type);
     }
 
     /**
@@ -222,11 +223,11 @@ public class Main {
      * Methode pour declarer la perte d'un passport.
      * On assumera qu'un passport déclaré perdu est rendu invalide
      */
-    private static void declarerPerte(ArrayList<Passport> passports, ServicePassport servicePassport, Scanner sc) {
+    private static void declarerPerte(ServicePassport servicePassport, Scanner sc) {
         System.out.println("Veuillez entrer le numéro du passport: ");
         String numPassport = sc.next();
         //Recherche d'un passport via la classe ServicePassport
-        Passport monPassport = servicePassport.getPassport(passports, numPassport);
+        Passport monPassport = servicePassport.getPassport(numPassport);
         //Vérifier si le passport a été retrouvé dans la liste des passports enrégistrés
         if (monPassport == null) {
             System.out.println("Passport non trouvé dans la base avec ce numéro : " + numPassport);
@@ -239,11 +240,11 @@ public class Main {
     /**
      * Methode pour annuler un visa
      */
-    private static void AnnulerVisa(ArrayList<Passport> passports, ServicePassport servicePassport, ServiceConsulaire serviceConsulaire, Scanner sc) {
+    private static void AnnulerVisa(ServicePassport servicePassport, ServiceConsulaire serviceConsulaire, Scanner sc) {
         System.out.println("Veuillez entrer le numéro du passport: ");
         String numPassport = sc.next();
         //Recherche d'un passport via la classe ServicePassport
-        Passport monPassport = servicePassport.getPassport(passports, numPassport);
+        Passport monPassport = servicePassport.getPassport(numPassport);
         //Vérifier si le passport a été retrouvé dans la liste des passports enrégistrés
         if (monPassport == null) {
             System.out.println("passport.Passport non trouvé dans la base avec ce numéro : " + numPassport);
@@ -255,11 +256,11 @@ public class Main {
     /**
      * Methode pour prolonger la validite d'un passport
      */
-    private static void prolongerValiditePassport(ArrayList<Passport> passports, ServicePassport servicePassport, Scanner sc) {
+    private static void prolongerValiditePassport(ServicePassport servicePassport, Scanner sc) {
         System.out.println("Veuillez entrer le numéro du passport: ");
         String numPassport = sc.next();
         //Recherche d'un passport via la classe ServicePassport
-        Passport monPassport = servicePassport.getPassport(passports, numPassport);
+        Passport monPassport = servicePassport.getPassport(numPassport);
         //Vérifier si le passport a été retrouvé dans la liste des passports enrégistrés
         if (monPassport == null) {
             System.out.println("passport.Passport non trouvé dans la base avec ce numéro : " + numPassport);
@@ -273,11 +274,11 @@ public class Main {
     /**
      * Methode pour prolonger la validite d'un visa
      */
-    private static void prolongerValiditeVisa(ArrayList<Passport> passports, ServicePassport servicePassport, ServiceConsulaire serviceConsulaire, Scanner sc) {
+    private static void prolongerValiditeVisa(ServicePassport servicePassport, ServiceConsulaire serviceConsulaire, Scanner sc) {
         System.out.println("Veuillez entrer le numéro du passport: ");
         String numPassport = sc.next();
         //Recherche d'un passport via la classe ServicePassport
-        Passport monPassport = servicePassport.getPassport(passports, numPassport);
+        Passport monPassport = servicePassport.getPassport(numPassport);
         //Vérifier si le passport a été retrouvé dans la liste des passports enrégistrés
         if (monPassport == null) {
             System.out.println("passport.Passport non trouvé dans la base avec ce numéro : " + numPassport);

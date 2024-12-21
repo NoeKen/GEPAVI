@@ -70,13 +70,13 @@ public class Visa {
 
     public String seeVisa() {
         return "Visa{" +
-                "\n\t\t\trefID='" + refID + '\'' +
-                ", \n\t\t\ttype='" + type + '\'' +
-                ", \n\t\t\tdateDelivrance=" + dateDelivrance +
-                ", \n\t\t\tdateExpiration=" + dateExpiration +
-                ", \n\t\t\tvalide=" + valide +
-                ", \n\t\t\tnuméro passport=" + passport.getNumPassport() +
-                ", \n\t\t\tNom personne =" + passport.getPersonne().getNom() + " " + passport.getPersonne().getPrenom() +
+                ", \n\trefID='" + refID + '\'' +
+                ", \n\ttype='" + type + '\'' +
+                ", \n\tdateDelivrance=" + dateDelivrance +
+                ", \n\tdateExpiration=" + dateExpiration +
+                ", \n\tvalide=" + valide +
+                ", \n\tnuméro passport=" + passport.getNumPassport() +
+                ", \n\tNom personne =" + passport.getPersonne().getNom() + " " + passport.getPersonne().getPrenom() +
                 "\n}";
     }
 
