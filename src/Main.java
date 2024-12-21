@@ -32,7 +32,6 @@ public class Main {
             skip = false;
             System.out.println("Que désirez-vous faire? Entrez le numéro correspondant\n");
             System.out.println("""
-                    \t0.Verifier Expiration
                     \t1.Créer une personne\s
                     \t2.Demander un passeport
                     \t3.Demander un visa
@@ -44,10 +43,6 @@ public class Main {
             choixMenu = ServicesUtiles.IntExceptionManager(sc);
 
             switch (choixMenu) {
-                case 0: {
-                    servicePassport.verifierExpirationPassport();
-                    break;
-                }
                 case 1: {
                     creerPersonne(personnes, personneIndex);
                     personneIndex++;
@@ -74,7 +69,7 @@ public class Main {
                             2.Annuler un visa
                             3.Prolonger la validité du passeport
                             4.Prolonger la validité du visa
-                            5.Vérification annuelle
+                            5.Vérification expiration annuelle
                             6.Retourner au menu principal""");
                     choixsubMenu = ServicesUtiles.IntExceptionManager(sc);
                     switch (choixsubMenu) {
