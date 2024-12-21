@@ -87,6 +87,7 @@ public class ServiceConsulaire {
             }
             passport.getVisa().setValide(false);
             System.out.println("Visa invalidé avec succès");
+
         } catch (Exception e) {
             System.out.println("Une erreur est survenue lors de l'annulation du visa");
             if (passport.getVisa() == null) {
