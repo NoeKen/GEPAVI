@@ -77,9 +77,20 @@ public class Passport {
         this.visa = visa;
     }
 
+    public String passportToString() {
+        return "\nPassprt: {"
+                + "\n\tnumPassport= " + numPassport
+                + "\n\tdateDelivrance= " + dateDelivrance
+                + "\n\tdateExpiration= " + dateExpiration
+                + "\n\tlieuDelivrance= " + lieuDelivrance
+                + "\n\tvalide= " + valide
+                + "\n\tvisa= " + visa
+                + "\n\tpersonne= " + personne.getNom()+" "+personne.getPrenom()
+                + "\n}";
+    }
     @Override
     public String toString() {
-        return "\n\tPassport: {" +
+        return "{" +
                 "\n\t\tnumPassport='" + numPassport + '\'' +
                 ", \n\t\tdateDelivrance=" + dateDelivrance +
                 ", \n\t\tdateExpiration=" + dateExpiration +

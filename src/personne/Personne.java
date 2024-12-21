@@ -66,10 +66,11 @@ public class Personne {
     @Override
     public String toString() {
         return "Personne{" +
-                "\n\trefID='" + refID + '\'' +
-                ", \n\tnom='" + nom + '\'' +
-                ", \n\tprenom='" + prenom + '\'' +
-                ", \t" + passport +
+                "\n\trefID= '" + refID + '\'' +
+                ", \n\tnom= '" + nom + '\'' +
+                ", \n\tprenom= '" + prenom + '\'' +
+                ", \n\tpassport: " + passport +
+                ", \n\tsynchronized= "+ synchronize +
                 "\n}";
     }
 }

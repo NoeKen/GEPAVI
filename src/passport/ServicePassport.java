@@ -4,7 +4,6 @@ import personne.Personne;
 import services.ServicesUtiles;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 /**
@@ -21,14 +20,13 @@ public class ServicePassport {
     /**
      * Methode pour Generer un nouveau passport
      */
-    public Personne creerPassport(Personne personne, ArrayList<Passport> passports, LocalDate dateDelivrance, LocalDate dateExpiration) {
+    public void creerPassport(Personne personne, ArrayList<Passport> passports) {
         try {
-            Passport passport = new Passport(ServicesUtiles.GenerateUniqueID(index), personne, dateDelivrance, dateExpiration);
+            Passport passport = new Passport(ServicesUtiles.GenerateUniqueID(index), personne, LocalDate.now(), LocalDate.now().plusYears(DUREEPASSPORT));
             personne.setPassport(passport);
             passports.add(passport);
             index++;
             System.out.println("passport généré avec succès: " + personne);
-            return personne;
         } catch (Exception e) {
             System.out.println("Une erreur est survenue lors de la création du passport");
             throw new RuntimeException(e);
@@ -57,13 +55,14 @@ public class ServicePassport {
      */
     public void invaliderPassport(Passport passport) {
         try {
+            //Invalidation du passport en définissant son attribut setValide à false
             passport.setValide(false);
-            System.out.println("Passport invalidé. Vous devez également faire invalider votre visa");
             // Verifier si la synchronisation est activée pour cet utilisateur et invalider automatiquement le visa
             if (passport.getPersonne().isSynchronize()) {
                 passport.getVisa().setValide(false);
-                System.out.println("Votre visa a également été automatiquement invalidé");
-            }
+                System.out.println("Passport invalidé. Votre visa a également été automatiquement invalidé");
+            }else
+                System.out.println("Passport invalidé. Vous devez également faire invalider votre visa");
         } catch (Exception e) {
             System.out.println("Une erreur est survenue lors de l'invalidation du passport ");
         }
@@ -83,23 +82,29 @@ public class ServicePassport {
         return null;
     }
 
-    public ArrayList<Passport> verifierExpirationPassport(ArrayList<Passport> passports) {
-        ArrayList<Passport> validitePassports = new ArrayList<>();
-        ArrayList<Passport> invalidePassports = new ArrayList<>();
-        for (Passport passport : passports) {
-            // Calculer la différence en jours
-            long daysBetween = ChronoUnit.DAYS.between(LocalDate.now(), passport.getDateExpiration());
-            System.out.println("Nombre de jours restants: " + daysBetween);
-            if (passport.getValide()) {
-                validitePassports.add(passport);
-            }
-            if (!passport.getValide()) {
-                if (passport.getPersonne().isSynchronize()) {
-                    passport.setValide(true);
+    /**
+     * Vérifie la validité des passports et affiche ceux valides et ceux invalides
+     */
+    public void verifierExpirationPassport(ArrayList<Passport> passports) {
+        // Verifier si la liste est vide
+        if (!passports.isEmpty()) {
+            // Affichage des passports invalides
+            System.out.println("\n\n\tPassports invalides: ");
+            for (Passport passport : passports) {
+                //Verification des passports invalides
+                if (!passport.getValide()) {
+                    System.out.println(passport.passportToString());
                 }
-                invalidePassports.add(passport);
             }
-        }
-        return validitePassports;
+            // Affichage des passports valides
+            System.out.println("\n\tPassports valides: ");
+            for (Passport passport : passports) {
+                //Verification des passports valides
+                if (passport.getValide()) {
+                    System.out.println(passport.passportToString());
+                }
+            }
+        } else
+            System.out.println("\nDésolé,aucune donnée trouvée");
     }
 }

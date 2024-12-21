@@ -69,7 +69,7 @@ public class Visa {
     }
 
     public String seeVisa() {
-        return "visa.Visa{" +
+        return "Visa{" +
                 "\n\t\t\trefID='" + refID + '\'' +
                 ", \n\t\t\ttype='" + type + '\'' +
                 ", \n\t\t\tdateDelivrance=" + dateDelivrance +

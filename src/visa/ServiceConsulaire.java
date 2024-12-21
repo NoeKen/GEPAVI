@@ -9,6 +9,10 @@ public class ServiceConsulaire {
     private final int VALIDITE = 5;
     private int index;
 
+    public int getVALIDITE() {
+        return VALIDITE;
+    }
+
     /**
      * Methode pour la generation d'un nouveau visa pour une personne
      */
@@ -44,7 +48,7 @@ public class ServiceConsulaire {
             monVisa = new Visa(ServicesUtiles.GenerateUniqueID(index), typeVisa, LocalDate.now(), dateExpiration, passport);
             index++;
             passport.setVisa(monVisa);
-            System.out.println("Félicitation! visa.Visa imposé avec succès: \n" + monVisa.seeVisa());
+            System.out.println("Félicitation! Visa imposé avec succès: \n" + monVisa.seeVisa());
             return monVisa;
         }
         // Affichage d'un message en cas d'invalidite du passport et sortie de la fonction avec visa null
